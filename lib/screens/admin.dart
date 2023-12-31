@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tmw/screens/addService.dart';
+import 'package:tmw/screens/serviceListPage.dart';
 
 import '../db/category.dart';
+import 'categoryListPage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 
@@ -201,7 +203,12 @@ class _AdminState extends State<Admin> {
             ListTile(
               leading: Icon(Icons.change_history),
               title: Text("Service list"),
-              onTap: () {},
+              onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ServiceListPage()),
+              );
+            },
             ),
             Divider(),
             ListTile(
@@ -215,7 +222,12 @@ class _AdminState extends State<Admin> {
             ListTile(
               leading: Icon(Icons.category),
               title: Text("Category list"),
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CategoryListPage()),
+                );
+              },
             ),
 
 
@@ -234,34 +246,49 @@ class _AdminState extends State<Admin> {
         key: _categoryFormKey,
         child: TextFormField(
           controller: categoryController,
-          validator: (value){
-            if(value!.isEmpty){
-              return 'category cannot be empty';
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Category cannot be empty';
             }
+            return null; // Return null for no validation error
           },
           decoration: InputDecoration(
-              hintText: "add category"
+            hintText: "Add category",
           ),
         ),
       ),
       actions: <Widget>[
-        TextButton(onPressed: () async{
-          if(categoryController.text !=null){
-            _categoryService.createCategory(categoryController.text);
-          }
-          Fluttertoast.showToast(msg: 'category created');
-          Navigator.pop(context);
-        }, child: Text('ADD')),
-        TextButton(onPressed: ()
-        {
-          Navigator.pop(context);
+        TextButton(
+          onPressed: () async {
+            if (_categoryFormKey.currentState!.validate()) {
+              // If the form is valid, check if the category already exists
+              bool categoryExists = await _categoryService.checkCategoryExists(categoryController.text);
+
+              if (categoryExists) {
+                Fluttertoast.showToast(msg: 'Category already exists');
+              } else {
+                // If the category doesn't exist, add it
+                _categoryService.createCategory(categoryController.text);
+                Fluttertoast.showToast(msg: 'Category created');
+                Navigator.pop(context);
+              }
+            }
           },
-            child: Text('CANCEL'))
-       ],
+          child: Text('ADD'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('CANCEL'),
+        ),
+      ],
     );
 
     showDialog(context: context, builder: (_) => alert);
   }
+
+
 
 
 }

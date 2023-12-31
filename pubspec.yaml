@@ -39,13 +39,15 @@ dependencies:
   uuid:
   lecle_flutter_carousel_pro: ^0.0.3
 
-  firebase_storage: ^11.5.3
+  firebase_storage: 11.5.6
   fluttertoast: ^8.2.4
   cached_network_image: ^3.3.0
   intl: ^0.18.1
   firebase_database: ^10.3.6
   image_picker: ^1.0.5
   flutter_typeahead: ^5.0.1
+  flutter_quill: ^9.1.0
+  flutter_richtext_composer: ^0.2.3
 
 
 dev_dependencies:
